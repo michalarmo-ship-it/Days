@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>לוח ימי השבוע - תצוגה מאוחדת</title>
+    <title>לוח ימי השבוע - מיכל ערמון</title>
     <style>
         :root {
             --bg-soft: #f8fafc;
@@ -30,23 +30,23 @@
             display: flex;
             width: 95%;
             max-width: 1200px;
-            height: 80vh;
+            height: 75vh;
             align-items: center;
             justify-content: space-between;
             gap: 20px;
         }
 
-        /* --- צד ימין: כרטיסיות --- */
+        /* --- כרטיסיות --- */
         .cards-section {
             flex: 1.2;
             display: flex;
             flex-direction: column;
-            gap: 15px;
+            gap: 12px;
         }
 
         .card {
             background: white;
-            padding: 15px;
+            padding: 12px;
             border-radius: 25px;
             box-shadow: 0 4px 10px rgba(0,0,0,0.05);
             border: 4px solid #f1f5f9;
@@ -58,22 +58,22 @@
             background-color: #fff9c4;
         }
 
-        .label { font-size: 1rem; color: #64748b; font-weight: bold; }
-        .day-name { font-size: 2.4rem; font-weight: 900; margin: 5px 0; color: #1e293b; }
+        .label { font-size: 0.9rem; color: #64748b; font-weight: bold; }
+        .day-name { font-size: 2.2rem; font-weight: 900; margin: 5px 0; color: #1e293b; }
 
         .emojis {
-            font-size: 2.2rem;
+            font-size: 2rem;
             display: flex;
             justify-content: center;
             flex-wrap: wrap;
             gap: 5px;
-            min-height: 50px;
+            min-height: 45px;
         }
 
         select {
             width: 80%;
-            font-size: 1.4rem;
-            padding: 8px;
+            font-size: 1.3rem;
+            padding: 6px;
             border-radius: 12px;
             border: 2px solid #cbd5e1;
             margin-top: 5px;
@@ -83,14 +83,14 @@
         .audio-icon {
             background: #ffe0b2;
             border: none;
-            font-size: 1.8rem;
+            font-size: 1.6rem;
             cursor: pointer;
             border-radius: 50%;
-            padding: 8px;
+            padding: 6px;
             transition: 0.2s;
         }
 
-        /* --- צד שמאל: גלגל --- */
+        /* --- גלגל --- */
         .wheel-section {
             flex: 1;
             display: flex;
@@ -100,47 +100,51 @@
         }
 
         .walker {
-            font-size: 6rem;
+            font-size: 5.5rem;
             margin-bottom: -10px;
             z-index: 10;
-            transform: scaleX(-1); /* הליכה לכיוון המחר */
+            transform: scaleX(-1);
         }
 
         #wheel {
-            width: 400px;
-            height: 400px;
+            width: 380px;
+            height: 380px;
             border-radius: 50%;
             border: 12px solid #475569;
             background: white;
             position: relative;
             transition: transform 1s cubic-bezier(0.4, 0, 0.2, 1);
-            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
         }
 
         .node {
             position: absolute;
-            width: 90px;
-            height: 50px;
+            width: 85px;
+            height: 45px;
             top: 50%;
             left: 50%;
-            margin-left: -45px;
-            margin-top: -25px;
+            margin-left: -42px;
+            margin-top: -22px;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             font-weight: bold;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             background: #f1f5f9;
             border-radius: 12px;
-            transition: 0.4s;
         }
 
-        .node span { font-size: 1.3rem; }
-        .node.selected {
-            background: #ff7043;
-            color: white;
-            transform: scale(1.15);
+        .node span { font-size: 1.2rem; }
+        .node.selected { background: #ff7043; color: white; transform: scale(1.1); }
+
+        /* --- קרדיטים --- */
+        footer {
+            margin-top: auto;
+            padding: 10px;
+            font-size: 0.8rem;
+            color: #94a3b8;
+            width: 100%;
+            text-align: center;
         }
     </style>
 </head>
@@ -149,7 +153,6 @@
     <h1>איזה יום היום?</h1>
 
     <div class="main-layout">
-        
         <div class="cards-section">
             <div class="card" id="yest-card">
                 <span class="label">אתמול היה:</span>
@@ -185,8 +188,11 @@
             <div class="walker">🚶‍♂️</div>
             <div id="wheel"></div>
         </div>
-
     </div>
+
+    <footer>
+        רעיון והנחיות: <b>מיכל ערמון</b> | פיתוח: <b>Gemini AI</b>
+    </footer>
 
     <script>
         const names = ["ראשון", "שני", "שלישי", "רביעי", "חמישי", "שישי", "שבת"];
@@ -195,14 +201,13 @@
         const deg = 360 / 7;
         let currentIdx = 0;
 
-        // בניית הגלגל
         names.forEach((name, i) => {
             const node = document.createElement('div');
             node.className = 'node';
             node.id = `node-${i}`;
             node.innerHTML = `<span>${icons[i]}</span>${name}`;
             const a = i * deg;
-            node.style.transform = `rotate(${a}deg) translate(0, -165px) rotate(${-a}deg)`;
+            node.style.transform = `rotate(${a}deg) translate(0, -155px) rotate(${-a}deg)`;
             node.onclick = () => {
                 document.getElementById('day-picker').value = i;
                 update(i, false);
@@ -215,24 +220,20 @@
             const yIdx = (idx - 1 + 7) % 7;
             const nIdx = (idx + 1) % 7;
 
-            // שמות
             document.getElementById('yest-name').innerText = names[yIdx];
             document.getElementById('next-name').innerText = names[nIdx];
 
-            // אימוג'ים (מנייה או בודד לשבת)
             setEmojis('yest-emojis', yIdx);
             setEmojis('today-emojis', idx);
             setEmojis('next-emojis', nIdx);
 
-            // סיבוב גלגל
             const rot = -idx * deg;
             wheelEl.style.transform = `rotate(${rot}deg)`;
 
-            // תיקון טקסט בגלגל
             names.forEach((_, i) => {
                 const el = document.getElementById(`node-${i}`);
                 const curA = i * deg;
-                el.style.transform = `rotate(${curA}deg) translate(0, -165px) rotate(${-curA - rot}deg)`;
+                el.style.transform = `rotate(${curA}deg) translate(0, -155px) rotate(${-curA - rot}deg)`;
                 el.classList.toggle('selected', i === idx);
             });
 
@@ -242,7 +243,6 @@
         function setEmojis(id, dayI) {
             const div = document.getElementById(id);
             div.innerHTML = '';
-            // יום שבת מקבל רק אימוג'י 1. ימים אחרים לפי הסדר (1-6).
             const count = (dayI === 6) ? 1 : (dayI + 1);
             for(let i = 0; i < count; i++) {
                 const s = document.createElement('span');
