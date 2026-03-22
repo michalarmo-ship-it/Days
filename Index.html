@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>לוח ימי השבוע - מותאם למסך</title>
+    <title>לוח ימי השבוע - תצוגה רחבה</title>
     <style>
         :root {
             --bg-grad: linear-gradient(135deg, #fff9c4 0%, #e1f5fe 100%);
@@ -16,86 +16,80 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: var(--bg-grad);
             margin: 0;
-            padding: 10px;
+            padding: 20px;
             display: flex;
             flex-direction: column;
             align-items: center;
-            height: 100vh;
+            min-height: 100vh;
             color: var(--text-dark);
-            overflow: hidden; /* מונע גלילה של כל העמוד */
         }
 
-        h1 { font-size: 2rem; margin: 10px 0; color: #6d4c41; }
+        h1 { font-size: 2.5rem; margin-bottom: 30px; color: #6d4c41; }
 
         .app-layout {
             display: flex;
-            width: 98%;
-            max-width: 1300px;
+            width: 95%;
+            max-width: 1400px;
             justify-content: center;
-            align-items: flex-start;
-            gap: 20px;
-            height: 85vh;
+            align-items: center; /* ממרכז את הגלגל מול הכרטיסיות */
+            gap: 50px;
         }
 
         /* --- כרטיסיות (ימין) --- */
         .cards-container {
-            flex: 1;
+            flex: 1.5; /* מגדיל את אזור הכרטיסיות שיהיה רחב יותר */
             display: flex;
             flex-direction: column;
-            gap: 10px;
-            max-width: 450px;
-            height: 100%;
-            overflow-y: auto; /* מאפשר גלילה רק בתוך אזור הכרטיסיות אם הן ארוכות מדי */
-            padding-left: 10px;
+            gap: 15px;
         }
 
         .nice-card {
             background: var(--card-white);
-            padding: 15px;
-            border-radius: 25px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            padding: 20px;
+            border-radius: 30px;
+            box-shadow: 0 6px 15px rgba(0,0,0,0.05);
             border: 4px solid #f1f5f9;
             text-align: center;
-            flex-shrink: 0; /* מונע מהכרטיסיות להתכווץ */
         }
 
         .nice-card.active {
             border-color: var(--accent-orange);
             background-color: #fffde7;
-            box-shadow: 0 6px 15px rgba(255,171,145,0.2);
+            box-shadow: 0 8px 20px rgba(255,171,145,0.25);
         }
 
-        .card-label { font-size: 1rem; color: #8d6e63; font-weight: bold; }
-        .card-day { font-size: 2.2rem; font-weight: 900; margin: 5px 0; }
+        .card-label { font-size: 1.2rem; color: #8d6e63; font-weight: bold; }
+        .card-day { font-size: 2.5rem; font-weight: 900; margin: 10px 0; }
 
         .emoji-list {
-            font-size: 2rem;
+            font-size: 2.5rem;
             display: flex;
             justify-content: center;
             flex-wrap: wrap;
-            gap: 6px;
-            min-height: 50px;
-            margin-top: 5px;
+            gap: 10px;
+            min-height: 60px;
+            margin-top: 10px;
         }
 
         #day-select {
-            width: 90%;
-            font-size: 1.4rem;
-            padding: 10px;
+            width: 80%;
+            font-size: 1.5rem;
+            padding: 12px;
             border-radius: 15px;
             border: 2px solid #ffccbc;
-            margin: 10px 0;
+            margin: 15px 0;
             cursor: pointer;
         }
 
         .speaker-icon {
             background: #ffe0b2;
             border: none;
-            font-size: 1.6rem;
+            font-size: 2rem;
             cursor: pointer;
             border-radius: 50%;
-            padding: 10px;
+            padding: 12px;
             transition: 0.2s;
+            vertical-align: middle;
         }
         .speaker-icon:hover { transform: scale(1.1); }
 
@@ -105,55 +99,54 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
             position: relative;
         }
 
         .walker-man {
-            font-size: 5.5rem;
-            margin-bottom: -15px;
+            font-size: 6rem;
+            margin-bottom: -10px;
             z-index: 5;
             transform: scaleX(-1);
-            filter: drop-shadow(0 4px 4px rgba(0,0,0,0.1));
+            filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1));
         }
 
         #the-wheel {
-            width: 380px; /* הקטנה קלה כדי שיתאים למסך */
-            height: 380px;
+            width: 420px;
+            height: 420px;
             border-radius: 50%;
-            border: 12px solid #6d4c41;
+            border: 15px solid #6d4c41;
             background: white;
             position: relative;
             transition: transform 1.2s cubic-bezier(0.4, 0, 0.2, 1);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.1);
         }
 
         .wheel-node {
             position: absolute;
-            width: 90px;
-            height: 50px;
+            width: 100px;
+            height: 60px;
             top: 50%;
             left: 50%;
-            margin-left: -45px;
-            margin-top: -25px;
+            margin-left: -50px;
+            margin-top: -30px;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
             font-weight: bold;
-            font-size: 0.95rem;
+            font-size: 1rem;
             background: #f8fafc;
             border-radius: 15px;
             cursor: pointer;
             transition: 0.5s;
         }
 
-        .wheel-node span { font-size: 1.3rem; }
+        .wheel-node span { font-size: 1.5rem; }
         .wheel-node.active-day {
             background: #ff7043;
             color: white;
             transform: scale(1.2);
-            box-shadow: 0 4px 10px rgba(255,112,67,0.3);
+            box-shadow: 0 5px 15px rgba(255,112,67,0.4);
         }
     </style>
 </head>
@@ -171,7 +164,7 @@
             </div>
 
             <div class="nice-card active" id="c-today">
-                <div style="display: flex; justify-content: center; align-items: center; gap: 15px;">
+                <div style="display: flex; justify-content: center; align-items: center; gap: 20px;">
                     <span class="card-label">היום:</span>
                     <button class="speaker-icon" onclick="speakText()">🔊</button>
                 </div>
@@ -215,7 +208,7 @@
             div.id = `node-${i}`;
             div.innerHTML = `<span>${icons[i]}</span>${n}`;
             const a = i * angleSize;
-            div.style.transform = `rotate(${a}deg) translate(0, -150px) rotate(${-a}deg)`;
+            div.style.transform = `rotate(${a}deg) translate(0, -165px) rotate(${-a}deg)`;
             div.onclick = () => {
                 document.getElementById('day-select').value = i;
                 updateAll(i, false);
@@ -232,7 +225,7 @@
             document.getElementById('t-yest').innerText = names[yIdx];
             document.getElementById('t-next').innerText = names[nIdx];
 
-            // עדכון מנייה (שבת מקבלת רק 1)
+            // עדכון אימוג'ים (שבת תמיד 1)
             renderEmojis('e-yest', yIdx);
             renderEmojis('e-today', idx);
             renderEmojis('e-next', nIdx);
@@ -245,7 +238,7 @@
             names.forEach((_, i) => {
                 const el = document.getElementById(`node-${i}`);
                 const curA = i * angleSize;
-                el.style.transform = `rotate(${curA}deg) translate(0, -150px) rotate(${-curA - r}deg)`;
+                el.style.transform = `rotate(${curA}deg) translate(0, -165px) rotate(${-curA - r}deg)`;
                 el.classList.toggle('active-day', i === idx);
             });
 
@@ -255,7 +248,6 @@
         function renderEmojis(id, dayI) {
             const box = document.getElementById(id);
             box.innerHTML = '';
-            // שבת תמיד 1, אחרת לפי המיקום (1-6)
             const count = (dayI === 6) ? 1 : (dayI + 1);
             for(let i = 0; i < count; i++) {
                 const s = document.createElement('span');
@@ -273,7 +265,7 @@
         window.onload = () => {
             const todayIdx = new Date().getDay();
             document.getElementById('day-select').value = todayIdx;
-            updateAll(todayIdx, false); // false מבטיח שאין הקראה אוטומטית בטעינה
+            updateAll(todayIdx, false);
         };
     </script>
 </body>
