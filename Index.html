@@ -24,73 +24,85 @@
             overflow: hidden;
         }
 
-        h1 { margin: 15px 0; font-size: 2.2rem; color: #475569; }
+        h1 { margin: 10px 0; font-size: 2rem; color: #475569; }
 
         .main-layout {
             display: flex;
-            width: 95%;
-            max-width: 1200px;
-            height: 75vh;
+            width: 98%;
+            max-width: 1300px;
+            height: 82vh;
             align-items: center;
-            justify-content: space-between;
-            gap: 20px;
+            justify-content: center;
+            gap: 30px;
         }
 
-        /* --- כרטיסיות --- */
+        /* --- צד ימין: כרטיסיות בסגנון קנבה --- */
         .cards-section {
-            flex: 1.2;
+            flex: 1.4;
             display: flex;
             flex-direction: column;
-            gap: 12px;
+            gap: 10px;
         }
 
         .card {
             background: white;
-            padding: 12px;
-            border-radius: 25px;
+            padding: 15px 25px;
+            border-radius: 20px;
             box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-            border: 4px solid #f1f5f9;
-            text-align: center;
+            border: 3px solid #f1f5f9;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
 
         .card.active {
             border-color: var(--accent);
             background-color: #fff9c4;
+            transform: scale(1.02);
         }
 
-        .label { font-size: 0.9rem; color: #64748b; font-weight: bold; }
-        .day-name { font-size: 2.2rem; font-weight: 900; margin: 5px 0; color: #1e293b; }
+        .row-layout {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            width: 100%;
+        }
+
+        .label { font-size: 1.2rem; color: #64748b; font-weight: bold; width: 80px; text-align: left; }
+        .arrow { font-size: 2rem; color: #c62828; display: flex; align-items: center; }
+        .day-display { font-size: 2.2rem; font-weight: 900; color: #1e293b; flex: 1; text-align: right; }
 
         .emojis {
-            font-size: 2rem;
+            font-size: 2.2rem;
             display: flex;
             justify-content: center;
             flex-wrap: wrap;
             gap: 5px;
-            min-height: 45px;
+            margin-top: 5px;
+            min-height: 40px;
         }
 
         select {
-            width: 80%;
-            font-size: 1.3rem;
-            padding: 6px;
-            border-radius: 12px;
+            font-size: 1.4rem;
+            padding: 5px;
+            border-radius: 10px;
             border: 2px solid #cbd5e1;
-            margin-top: 5px;
             outline: none;
+            cursor: pointer;
         }
 
-        .audio-icon {
+        .audio-btn {
             background: #ffe0b2;
             border: none;
-            font-size: 1.6rem;
+            font-size: 1.8rem;
             cursor: pointer;
             border-radius: 50%;
-            padding: 6px;
-            transition: 0.2s;
+            padding: 8px;
+            margin-left: 10px;
         }
 
-        /* --- גלגל --- */
+        /* --- צד שמאל: גלגל --- */
         .wheel-section {
             flex: 1;
             display: flex;
@@ -132,18 +144,16 @@
             font-size: 0.85rem;
             background: #f1f5f9;
             border-radius: 12px;
+            cursor: pointer;
         }
 
         .node span { font-size: 1.2rem; }
         .node.selected { background: #ff7043; color: white; transform: scale(1.1); }
 
-        /* --- קרדיטים --- */
         footer {
-            margin-top: auto;
             padding: 10px;
-            font-size: 0.8rem;
+            font-size: 0.85rem;
             color: #94a3b8;
-            width: 100%;
             text-align: center;
         }
     </style>
@@ -153,33 +163,43 @@
     <h1>איזה יום היום?</h1>
 
     <div class="main-layout">
+        
         <div class="cards-section">
             <div class="card" id="yest-card">
-                <span class="label">אתמול היה:</span>
-                <div class="day-name" id="yest-name">-</div>
+                <div class="row-layout">
+                    <span class="label">אתמול:</span>
+                    <span class="arrow">⬅️</span>
+                    <div class="day-display" id="yest-name">-</div>
+                </div>
                 <div class="emojis" id="yest-emojis"></div>
             </div>
 
             <div class="card active" id="today-card">
-                <div style="display: flex; justify-content: center; align-items: center; gap: 15px;">
+                <div class="row-layout">
+                    <button class="audio-btn" onclick="playAudio()">🔊</button>
                     <span class="label">היום:</span>
-                    <button class="audio-icon" onclick="playAudio()">🔊</button>
+                    <span class="arrow">⬅️</span>
+                    <div class="day-display">
+                        <select id="day-picker" onchange="update(parseInt(this.value), false)">
+                            <option value="0">יום ראשון</option>
+                            <option value="1">יום שני</option>
+                            <option value="2">יום שלישי</option>
+                            <option value="3">יום רביעי</option>
+                            <option value="4">יום חמישי</option>
+                            <option value="5">יום שישי</option>
+                            <option value="6">יום שבת</option>
+                        </select>
+                    </div>
                 </div>
-                <select id="day-picker" onchange="update(parseInt(this.value), false)">
-                    <option value="0">יום ראשון</option>
-                    <option value="1">יום שני</option>
-                    <option value="2">יום שלישי</option>
-                    <option value="3">יום רביעי</option>
-                    <option value="4">יום חמישי</option>
-                    <option value="5">יום שישי</option>
-                    <option value="6">יום שבת</option>
-                </select>
                 <div class="emojis" id="today-emojis"></div>
             </div>
 
             <div class="card" id="next-card">
-                <span class="label">מחר יהיה:</span>
-                <div class="day-name" id="next-name">-</div>
+                <div class="row-layout">
+                    <span class="label">מחר:</span>
+                    <span class="arrow">⬅️</span>
+                    <div class="day-display" id="next-name">-</div>
+                </div>
                 <div class="emojis" id="next-emojis"></div>
             </div>
         </div>
@@ -188,6 +208,7 @@
             <div class="walker">🚶‍♂️</div>
             <div id="wheel"></div>
         </div>
+
     </div>
 
     <footer>
