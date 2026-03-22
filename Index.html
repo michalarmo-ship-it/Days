@@ -3,107 +3,96 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>לוח ימי השבוע - מיכל ערמון</title>
+    <title>איזה יום היום? - מיכל ערמון</title>
     <style>
-        :root {
-            --bg-soft: #f8fafc;
-            --accent: #ff8a65;
-            --text-main: #334155;
-        }
-
         body {
-            font-family: 'Segoe UI', Arial, sans-serif;
-            background: linear-gradient(135deg, #fffde7 0%, #e0f2fe 100%);
+            font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
             display: flex;
             flex-direction: column;
             align-items: center;
             height: 100vh;
-            color: var(--text-main);
+            background: linear-gradient(135deg, #f0f9ff 0%, #fff7ed 100%);
+            color: #334155;
             overflow: hidden;
         }
 
-        h1 { margin: 10px 0; font-size: 2rem; color: #475569; }
-
-        .main-layout {
-            display: flex;
-            width: 98%;
-            max-width: 1300px;
-            height: 82vh;
-            align-items: center;
-            justify-content: center;
-            gap: 30px;
+        /* כותרת עליונה - מרווחת יותר שלא תיחסם */
+        h1 { 
+            margin: 20px 0 10px 0; 
+            font-size: 2.2rem; 
+            color: #475569; 
+            z-index: 20;
         }
 
-        /* --- צד ימין: כרטיסיות בסגנון קנבה --- */
-        .cards-section {
-            flex: 1.4;
+        .main-container {
+            display: flex;
+            width: 95%;
+            max-width: 1250px;
+            height: 75vh;
+            align-items: center;
+            justify-content: center;
+            gap: 40px;
+            transform: scale(0.92); /* הקטנה קלה של הכל כדי למנוע הסתרה */
+        }
+
+        /* --- צד ימין: כרטיסיות --- */
+        .cards-column {
+            flex: 1.3;
             display: flex;
             flex-direction: column;
-            gap: 10px;
+            gap: 12px;
         }
 
         .card {
             background: white;
-            padding: 15px 25px;
-            border-radius: 20px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            padding: 15px;
+            border-radius: 25px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.06);
             border: 3px solid #f1f5f9;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
+            text-align: center;
         }
 
         .card.active {
-            border-color: var(--accent);
-            background-color: #fff9c4;
-            transform: scale(1.02);
+            border-color: #fb923c;
+            background-color: #fefce8;
         }
 
-        .row-layout {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 20px;
-            width: 100%;
-        }
+        .label { font-size: 1rem; color: #64748b; font-weight: bold; }
+        .day-text { font-size: 2.5rem; font-weight: 900; margin: 5px 0; color: #1e293b; }
 
-        .label { font-size: 1.2rem; color: #64748b; font-weight: bold; width: 80px; text-align: left; }
-        .arrow { font-size: 2rem; color: #c62828; display: flex; align-items: center; }
-        .day-display { font-size: 2.2rem; font-weight: 900; color: #1e293b; flex: 1; text-align: right; }
-
-        .emojis {
+        .emoji-row {
             font-size: 2.2rem;
             display: flex;
             justify-content: center;
             flex-wrap: wrap;
-            gap: 5px;
-            margin-top: 5px;
-            min-height: 40px;
+            gap: 8px;
+            min-height: 50px;
         }
 
         select {
-            font-size: 1.4rem;
-            padding: 5px;
-            border-radius: 10px;
+            width: 85%;
+            font-size: 1.5rem;
+            padding: 8px;
+            border-radius: 12px;
             border: 2px solid #cbd5e1;
-            outline: none;
+            margin-top: 5px;
             cursor: pointer;
         }
 
-        .audio-btn {
-            background: #ffe0b2;
+        .audio-icon {
+            background: #ffedd5;
             border: none;
             font-size: 1.8rem;
             cursor: pointer;
             border-radius: 50%;
             padding: 8px;
-            margin-left: 10px;
+            transition: 0.2s;
         }
 
         /* --- צד שמאל: גלגל --- */
-        .wheel-section {
+        .wheel-column {
             flex: 1;
             display: flex;
             flex-direction: column;
@@ -111,50 +100,63 @@
             position: relative;
         }
 
-        .walker {
+        .walker-img {
             font-size: 5.5rem;
-            margin-bottom: -10px;
+            margin-bottom: -15px;
             z-index: 10;
             transform: scaleX(-1);
         }
 
-        #wheel {
-            width: 380px;
-            height: 380px;
+        #wheel-element {
+            width: 420px;
+            height: 420px;
             border-radius: 50%;
             border: 12px solid #475569;
             background: white;
             position: relative;
             transition: transform 1s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
         }
 
+        /* עיצוב ה"בועות" בתוך הגלגל */
         .node {
             position: absolute;
-            width: 85px;
-            height: 45px;
+            width: 95px;
+            height: 50px;
             top: 50%;
             left: 50%;
-            margin-left: -42px;
-            margin-top: -22px;
+            margin-left: -47px;
+            margin-top: -25px;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             font-weight: bold;
-            font-size: 0.85rem;
-            background: #f1f5f9;
-            border-radius: 12px;
+            font-size: 1rem;
+            background: #dcfce7; /* ירוק בהיר */
+            color: #1e293b;      /* פונט כהה/שחור שיהיה קריא */
+            border-radius: 15px;
             cursor: pointer;
+            transition: 0.4s;
         }
 
-        .node span { font-size: 1.2rem; }
-        .node.selected { background: #ff7043; color: white; transform: scale(1.1); }
+        .node span { font-size: 1.4rem; }
+        
+        /* היום הנבחר בגלגל */
+        .node.selected {
+            background: #fb923c;
+            color: #000000; /* פונט שחור בולט ביום הנבחר */
+            transform: scale(1.15);
+            box-shadow: 0 0 15px rgba(251,146,60,0.4);
+        }
 
-        footer {
-            padding: 10px;
-            font-size: 0.85rem;
+        /* קרדיטים - פינה שמאלית תחתונה */
+        .footer-credits {
+            position: absolute;
+            bottom: 10px;
+            left: 15px;
+            font-size: 0.75rem;
             color: #94a3b8;
-            text-align: center;
         }
     </style>
 </head>
@@ -162,126 +164,123 @@
 
     <h1>איזה יום היום?</h1>
 
-    <div class="main-layout">
+    <div class="main-container">
         
-        <div class="cards-section">
-            <div class="card" id="yest-card">
-                <div class="row-layout">
-                    <span class="label">אתמול:</span>
-                    <span class="arrow">⬅️</span>
-                    <div class="day-display" id="yest-name">-</div>
-                </div>
-                <div class="emojis" id="yest-emojis"></div>
+        <div class="cards-column">
+            <div class="card" id="y-card">
+                <span class="label">אתמול היה:</span>
+                <div class="day-text" id="y-name">-</div>
+                <div class="emoji-row" id="y-emojis"></div>
             </div>
 
-            <div class="card active" id="today-card">
-                <div class="row-layout">
-                    <button class="audio-btn" onclick="playAudio()">🔊</button>
+            <div class="card active" id="t-card">
+                <div style="display: flex; justify-content: center; align-items: center; gap: 15px;">
                     <span class="label">היום:</span>
-                    <span class="arrow">⬅️</span>
-                    <div class="day-display">
-                        <select id="day-picker" onchange="update(parseInt(this.value), false)">
-                            <option value="0">יום ראשון</option>
-                            <option value="1">יום שני</option>
-                            <option value="2">יום שלישי</option>
-                            <option value="3">יום רביעי</option>
-                            <option value="4">יום חמישי</option>
-                            <option value="5">יום שישי</option>
-                            <option value="6">יום שבת</option>
-                        </select>
-                    </div>
+                    <button class="audio-icon" onclick="playCurrentDay()">🔊</button>
                 </div>
-                <div class="emojis" id="today-emojis"></div>
+                <select id="selector" onchange="syncUI(parseInt(this.value), false)">
+                    <option value="0">יום ראשון</option>
+                    <option value="1">יום שני</option>
+                    <option value="2">יום שלישי</option>
+                    <option value="3">יום רביעי</option>
+                    <option value="4">יום חמישי</option>
+                    <option value="5">יום שישי</option>
+                    <option value="6">יום שבת</option>
+                </select>
+                <div class="emoji-row" id="t-emojis"></div>
             </div>
 
-            <div class="card" id="next-card">
-                <div class="row-layout">
-                    <span class="label">מחר:</span>
-                    <span class="arrow">⬅️</span>
-                    <div class="day-display" id="next-name">-</div>
-                </div>
-                <div class="emojis" id="next-emojis"></div>
+            <div class="card" id="n-card">
+                <span class="label">מחר יהיה:</span>
+                <div class="day-text" id="n-name">-</div>
+                <div class="emoji-row" id="n-emojis"></div>
             </div>
         </div>
 
-        <div class="wheel-section">
-            <div class="walker">🚶‍♂️</div>
-            <div id="wheel"></div>
+        <div class="wheel-column">
+            <div class="walker-img">🚶‍♂️</div>
+            <div id="wheel-element"></div>
         </div>
 
     </div>
 
-    <footer>
-        רעיון והנחיות: <b>מיכל ערמון</b> | פיתוח: <b>Gemini AI</b>
-    </footer>
+    <div class="footer-credits">
+        רעיון והנחיות: מיכל ערמון | פיתוח: Gemini AI
+    </div>
 
     <script>
-        const names = ["ראשון", "שני", "שלישי", "רביעי", "חמישי", "שישי", "שבת"];
+        const days = ["ראשון", "שני", "שלישי", "רביעי", "חמישי", "שישי", "שבת"];
         const icons = ["☀️", "🌙", "🌳", "🦋", "🎈", "🕯️", "🏠🛌"];
-        const wheelEl = document.getElementById('wheel');
-        const deg = 360 / 7;
-        let currentIdx = 0;
+        const wheel = document.getElementById('wheel-element');
+        const step = 360 / 7;
+        let currentDayIdx = 0;
 
-        names.forEach((name, i) => {
-            const node = document.createElement('div');
-            node.className = 'node';
-            node.id = `node-${i}`;
-            node.innerHTML = `<span>${icons[i]}</span>${name}`;
-            const a = i * deg;
-            node.style.transform = `rotate(${a}deg) translate(0, -155px) rotate(${-a}deg)`;
-            node.onclick = () => {
-                document.getElementById('day-picker').value = i;
-                update(i, false);
+        // בניית הגלגל
+        days.forEach((day, i) => {
+            const div = document.createElement('div');
+            div.className = 'node';
+            div.id = `day-node-${i}`;
+            div.innerHTML = `<span>${icons[i]}</span>${day}`;
+            const angle = i * step;
+            div.style.transform = `rotate(${angle}deg) translate(0, -170px) rotate(${-angle}deg)`;
+            div.onclick = () => {
+                document.getElementById('selector').value = i;
+                syncUI(i, false);
             };
-            wheelEl.appendChild(node);
+            wheel.appendChild(div);
         });
 
-        function update(idx, audio) {
-            currentIdx = idx;
-            const yIdx = (idx - 1 + 7) % 7;
-            const nIdx = (idx + 1) % 7;
+        function syncUI(idx, shouldSpeak) {
+            currentDayIdx = idx;
+            const yesterday = (idx - 1 + 7) % 7;
+            const tomorrow = (idx + 1) % 7;
 
-            document.getElementById('yest-name').innerText = names[yIdx];
-            document.getElementById('next-name').innerText = names[nIdx];
+            // עדכון שמות בכרטיסיות
+            document.getElementById('y-name').innerText = days[yesterday];
+            document.getElementById('n-name').innerText = days[tomorrow];
 
-            setEmojis('yest-emojis', yIdx);
-            setEmojis('today-emojis', idx);
-            setEmojis('next-emojis', nIdx);
+            // עדכון אימוג'ים
+            fillEmojiBox('y-emojis', yesterday);
+            fillEmojiBox('t-emojis', idx);
+            fillEmojiBox('n-emojis', tomorrow);
 
-            const rot = -idx * deg;
-            wheelEl.style.transform = `rotate(${rot}deg)`;
+            // סיבוב הגלגל
+            const rotation = -idx * step;
+            wheel.style.transform = `rotate(${rotation}deg)`;
 
-            names.forEach((_, i) => {
-                const el = document.getElementById(`node-${i}`);
-                const curA = i * deg;
-                el.style.transform = `rotate(${curA}deg) translate(0, -155px) rotate(${-curA - rot}deg)`;
-                el.classList.toggle('selected', i === idx);
+            // תיקון זווית הטקסט בתוך הגלגל והדגשת הנבחר
+            days.forEach((_, i) => {
+                const node = document.getElementById(`day-node-${i}`);
+                const originalAngle = i * step;
+                node.style.transform = `rotate(${originalAngle}deg) translate(0, -170px) rotate(${-originalAngle - rotation}deg)`;
+                node.classList.toggle('selected', i === idx);
             });
 
-            if (audio) playAudio();
+            if (shouldSpeak) playCurrentDay();
         }
 
-        function setEmojis(id, dayI) {
-            const div = document.getElementById(id);
-            div.innerHTML = '';
-            const count = (dayI === 6) ? 1 : (dayI + 1);
+        function fillEmojiBox(elementId, dayIdx) {
+            const container = document.getElementById(elementId);
+            container.innerHTML = '';
+            // שבת = 1, יום ראשון = 1, יום שני = 2 וכו'
+            const count = (dayIdx === 6) ? 1 : (dayIdx + 1);
             for(let i = 0; i < count; i++) {
-                const s = document.createElement('span');
-                s.innerText = icons[dayI];
-                div.appendChild(s);
+                const span = document.createElement('span');
+                span.innerText = icons[dayIdx];
+                container.appendChild(span);
             }
         }
 
-        function playAudio() {
-            const msg = new SpeechSynthesisUtterance("היום יום " + names[currentIdx]);
-            msg.lang = 'he-IL';
-            window.speechSynthesis.speak(msg);
+        function playCurrentDay() {
+            const utterance = new SpeechSynthesisUtterance("היום יום " + days[currentDayIdx]);
+            utterance.lang = 'he-IL';
+            window.speechSynthesis.speak(utterance);
         }
 
         window.onload = () => {
-            const d = new Date().getDay();
-            document.getElementById('day-picker').value = d;
-            update(d, false);
+            const today = new Date().getDay();
+            document.getElementById('selector').value = today;
+            syncUI(today, false);
         };
     </script>
 </body>
