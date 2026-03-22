@@ -19,7 +19,7 @@
         }
 
         h1 { 
-            margin: 20px 0 10px 0; 
+            margin: 15px 0 5px 0; 
             font-size: 2.2rem; 
             color: #475569; 
             z-index: 20;
@@ -27,26 +27,27 @@
 
         .main-container {
             display: flex;
-            width: 95%;
-            max-width: 1250px;
-            height: 75vh;
+            width: 98%;
+            max-width: 1300px;
+            height: 80vh;
             align-items: center;
             justify-content: center;
-            gap: 40px;
-            transform: scale(0.92); 
+            gap: 20px;
+            transform: scale(0.95);
         }
 
+        /* --- צד ימין: כרטיסיות (מוקטנות) --- */
         .cards-column {
-            flex: 1.3;
+            flex: 0.8; /* תופס פחות מקום */
             display: flex;
             flex-direction: column;
-            gap: 12px;
+            gap: 8px;
         }
 
         .card {
             background: white;
-            padding: 15px;
-            border-radius: 25px;
+            padding: 10px;
+            border-radius: 20px;
             box-shadow: 0 4px 12px rgba(0,0,0,0.06);
             border: 3px solid #f1f5f9;
             text-align: center;
@@ -57,23 +58,23 @@
             background-color: #fefce8;
         }
 
-        .label { font-size: 1rem; color: #64748b; font-weight: bold; }
-        .day-text { font-size: 2.5rem; font-weight: 900; margin: 5px 0; color: #1e293b; }
+        .label { font-size: 0.85rem; color: #64748b; font-weight: bold; }
+        .day-text { font-size: 2rem; font-weight: 900; margin: 2px 0; color: #1e293b; }
 
         .emoji-row {
-            font-size: 2.2rem;
+            font-size: 1.8rem;
             display: flex;
             justify-content: center;
             flex-wrap: wrap;
-            gap: 8px;
-            min-height: 50px;
+            gap: 4px;
+            min-height: 40px;
         }
 
         select {
             width: 85%;
-            font-size: 1.5rem;
-            padding: 8px;
-            border-radius: 12px;
+            font-size: 1.2rem;
+            padding: 5px;
+            border-radius: 10px;
             border: 2px solid #cbd5e1;
             margin-top: 5px;
             cursor: pointer;
@@ -82,15 +83,15 @@
         .audio-icon {
             background: #ffedd5;
             border: none;
-            font-size: 1.8rem;
+            font-size: 1.5rem;
             cursor: pointer;
             border-radius: 50%;
-            padding: 8px;
-            transition: 0.2s;
+            padding: 5px;
         }
 
+        /* --- צד שמאל: גלגל (מוגדל) --- */
         .wheel-column {
-            flex: 1;
+            flex: 1.4; /* מקבל את רוב שטח המסך */
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -98,15 +99,15 @@
         }
 
         .walker-img {
-            font-size: 5.5rem;
+            font-size: 6rem; /* הגדלת האיש ההולך */
             margin-bottom: -15px;
             z-index: 10;
             transform: scaleX(-1);
         }
 
         #wheel-element {
-            width: 420px;
-            height: 420px;
+            width: 440px; /* גלגל גדול יותר */
+            height: 440px;
             border-radius: 50%;
             border: 12px solid #475569;
             background: white;
@@ -117,18 +118,18 @@
 
         .node {
             position: absolute;
-            width: 95px;
-            height: 50px;
+            width: 100px;
+            height: 55px;
             top: 50%;
             left: 50%;
-            margin-left: -47px;
-            margin-top: -25px;
+            margin-left: -50px;
+            margin-top: -27px;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             font-weight: bold;
-            font-size: 1rem;
+            font-size: 1.1rem;
             background: #dcfce7; 
             color: #1e293b;      
             border-radius: 15px;
@@ -136,9 +137,8 @@
             transition: 0.4s;
         }
 
-        .node span { font-size: 1.4rem; }
+        .node span { font-size: 1.5rem; }
         
-        /* תיקון: פונט שחור בולט ביום הנבחר */
         .node.selected {
             background: #fb923c !important;
             color: #000000 !important; 
@@ -169,7 +169,7 @@
             </div>
 
             <div class="card active" id="t-card">
-                <div style="display: flex; justify-content: center; align-items: center; gap: 15px;">
+                <div style="display: flex; justify-content: center; align-items: center; gap: 10px;">
                     <span class="label">היום:</span>
                     <button class="audio-icon" onclick="playCurrentDay()">🔊</button>
                 </div>
@@ -208,7 +208,6 @@
         const icons = ["☀️", "🌙", "🌳", "🦋", "🎈", "🕯️", "🏠🛌"];
         const wheel = document.getElementById('wheel-element');
         const step = 360 / 7;
-        let currentDayIdx = 0;
 
         days.forEach((day, i) => {
             const div = document.createElement('div');
@@ -216,7 +215,8 @@
             div.id = `day-node-${i}`;
             div.innerHTML = `<span>${icons[i]}</span>${day}`;
             const angle = i * step;
-            div.style.transform = `rotate(${angle}deg) translate(0, -170px) rotate(${-angle}deg)`;
+            // הרחקת הימים מהמרכז בגלל שהגלגל גדל
+            div.style.transform = `rotate(${angle}deg) translate(0, -185px) rotate(${-angle}deg)`;
             div.onclick = () => {
                 document.getElementById('selector').value = i;
                 syncUI(i, false);
@@ -225,7 +225,6 @@
         });
 
         function syncUI(idx, shouldSpeak) {
-            currentDayIdx = idx;
             const yesterday = (idx - 1 + 7) % 7;
             const tomorrow = (idx + 1) % 7;
 
@@ -242,11 +241,11 @@
             days.forEach((_, i) => {
                 const node = document.getElementById(`day-node-${i}`);
                 const originalAngle = i * step;
-                node.style.transform = `rotate(${originalAngle}deg) translate(0, -170px) rotate(${-originalAngle - rotation}deg)`;
+                node.style.transform = `rotate(${originalAngle}deg) translate(0, -185px) rotate(${-originalAngle - rotation}deg)`;
                 node.classList.toggle('selected', i === idx);
             });
 
-            if (shouldSpeak) playCurrentDay();
+            if (shouldSpeak) playCurrentDay(idx);
         }
 
         function fillEmojiBox(elementId, dayIdx) {
@@ -260,8 +259,9 @@
             }
         }
 
-        function playCurrentDay() {
-            const utterance = new SpeechSynthesisUtterance("היום יום " + days[currentDayIdx]);
+        function playCurrentDay(idx) {
+            const val = idx !== undefined ? idx : document.getElementById('selector').value;
+            const utterance = new SpeechSynthesisUtterance("היום יום " + days[val]);
             utterance.lang = 'he-IL';
             window.speechSynthesis.speak(utterance);
         }
