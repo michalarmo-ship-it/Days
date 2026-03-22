@@ -3,108 +3,108 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>מצגת ימי השבוע האינטראקטיבית</title>
+    <title>יום בשבוע - הגרסה הכי חמודה</title>
     <style>
         :root {
-            --bg-color: #f4f9ff;
-            --today-bg: #fffde7;
-            --accent-color: #ff5722;
-            --blue-accent: #3498db;
+            --bg-color: #fdf6e3;
+            --card-primary: #ffffff;
+            --accent-soft: #ffb74d;
+            --today-glow: #fff9c4;
+            --text-color: #5d4037;
         }
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: var(--bg-color);
+            background: linear-gradient(120deg, #fff9c4 0%, #e1f5fe 100%);
             margin: 0;
-            padding: 10px;
+            padding: 15px;
             display: flex;
             flex-direction: column;
             align-items: center;
             height: 100vh;
             overflow: hidden;
+            color: var(--text-color);
         }
 
-        h1 { color: #2c3e50; margin: 10px 0; font-size: 2rem; }
+        h1 {
+            font-size: 2.5rem;
+            margin: 10px 0;
+            color: #795548;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+        }
 
-        .container {
+        .main-wrapper {
             display: flex;
             width: 95%;
             max-width: 1200px;
             justify-content: space-around;
             align-items: center;
-            gap: 20px;
-            height: 80vh;
+            gap: 30px;
         }
 
-        /* --- צד ימין: לוח בקרה --- */
-        .info-panel {
+        /* --- כרטיסיות (ימין) --- */
+        .cards-area {
             flex: 1;
             display: flex;
             flex-direction: column;
             gap: 15px;
-            max-width: 400px;
+            max-width: 420px;
         }
 
-        .status-box {
-            background: white;
-            padding: 15px;
-            border-radius: 20px;
-            border: 2px solid #e0e0e0;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        .soft-card {
+            background: var(--card-primary);
+            padding: 15px 20px;
+            border-radius: 35px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.06);
+            border: 5px solid #fff;
             text-align: center;
-            transition: all 0.3s;
+            transition: all 0.4s ease;
         }
 
-        .status-box.active {
-            border-color: var(--accent-color);
-            background-color: var(--today-bg);
-            transform: scale(1.02);
+        .soft-card.active {
+            border-color: var(--accent-soft);
+            background-color: var(--today-glow);
+            transform: scale(1.03);
         }
 
-        .label-text { font-size: 1rem; color: #7f8c8d; display: block; }
-        .day-display { font-size: 2.2rem; font-weight: bold; color: #34495e; }
+        .label-sm { font-size: 1rem; color: #a1887f; font-weight: bold; }
+        .day-big { font-size: 2.2rem; font-weight: 800; margin: 2px 0; color: #4e342e; }
 
-        .today-header {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-        }
-
-        #day-select {
-            width: 100%;
-            font-size: 1.5rem;
-            padding: 10px;
-            border-radius: 12px;
-            border: 2px solid var(--blue-accent);
-            cursor: pointer;
-            margin-bottom: 10px;
-        }
-
-        .audio-button {
-            font-size: 1.5rem;
-            cursor: pointer;
-            background: #eee;
-            border: none;
-            padding: 10px;
-            border-radius: 50%;
-            transition: background 0.2s;
-        }
-        .audio-button:hover { background: #ddd; }
-
-        .count-area {
-            font-size: 2.5rem;
-            margin-top: 10px;
+        .count-emojis {
+            font-size: 1.8rem;
             display: flex;
             justify-content: center;
             flex-wrap: wrap;
-            gap: 5px;
-            min-height: 60px;
+            gap: 3px;
+            min-height: 40px;
         }
 
-        /* --- צד שמאל: גלגל ויזואלי --- */
-        .visual-panel {
-            flex: 1.2;
+        select {
+            width: 90%;
+            font-size: 1.3rem;
+            padding: 8px;
+            border-radius: 15px;
+            border: 2px solid #ffccbc;
+            background: white;
+            cursor: pointer;
+            margin: 5px 0;
+            outline: none;
+        }
+
+        .voice-btn {
+            background: #ffe0b2;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            border-radius: 50%;
+            padding: 8px;
+            transition: 0.2s;
+        }
+        .voice-btn:hover { transform: scale(1.1); }
+
+        /* --- גלגל (שמאל) --- */
+        .wheel-container {
+            flex: 1;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -112,83 +112,74 @@
         }
 
         .walker {
-            font-size: 5rem;
+            font-size: 5.5rem;
             margin-bottom: -15px;
-            z-index: 10;
+            z-index: 5;
+            /* הופך את האימוג'י שיפנה לכיוון המחר (ימינה) */
+            transform: scaleX(-1);
+            filter: drop-shadow(0 4px 4px rgba(0,0,0,0.1));
         }
 
-        .wheel-box {
-            position: relative;
-            width: 420px;
-            height: 420px;
-        }
-
-        #wheel {
-            width: 100%;
-            height: 100%;
+        .the-actual-wheel {
+            width: 440px;
+            height: 440px;
             border-radius: 50%;
-            border: 12px solid #333;
+            border: 12px solid #8d6e63;
             background: white;
             position: relative;
-            transition: transform 1.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            transition: transform 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
         }
 
-        .wheel-day-text {
+        .wheel-item {
             position: absolute;
-            width: 100px;
-            height: 45px;
+            width: 110px;
+            height: 50px;
             top: 50%;
             left: 50%;
-            margin-left: -50px;
-            margin-top: -22px;
+            margin-left: -55px;
+            margin-top: -25px;
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
             font-weight: bold;
-            font-size: 1.2rem;
-            background: #f1f3f5;
-            border-radius: 12px;
-            cursor: pointer;
-            transition: all 0.5s;
+            font-size: 1rem;
+            background: #efebe9;
+            border-radius: 15px;
+            transition: 0.5s;
         }
 
-        .wheel-day-text.highlight {
-            background: var(--accent-color);
+        .wheel-item span { font-size: 1.2rem; }
+
+        .wheel-item.highlight {
+            background: #ff7043;
             color: white;
-            transform: scale(1.1);
+            transform: scale(1.2);
         }
 
-        /* הגדרות לסאונד */
-        .sound-toggle {
-            margin-top: 10px;
-            font-size: 0.9rem;
-            color: #555;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-        }
+        .controls { margin-top: 15px; font-size: 0.85rem; }
     </style>
 </head>
 <body>
 
     <h1>איזה יום היום?</h1>
 
-    <div class="container">
+    <div class="main-wrapper">
         
-        <div class="info-panel">
-            <div class="status-box" id="box-yesterday">
-                <span class="label-text">אתמול היה:</span>
-                <span class="day-display" id="val-yesterday">-</span>
+        <div class="cards-area">
+            <div class="soft-card" id="card-yest">
+                <span class="label-sm">אתמול היה:</span>
+                <div class="day-big" id="val-yest">-</div>
+                <div class="count-emojis" id="emo-yest"></div>
             </div>
 
-            <div class="status-box active" id="box-today">
-                <div class="today-header">
-                    <span class="label-text">היום:</span>
-                    <button class="audio-button" onclick="speakDay()" title="השמע קול">🔊</button>
+            <div class="soft-card active" id="card-today">
+                <div style="display: flex; justify-content: center; align-items: center; gap: 10px;">
+                    <span class="label-sm">היום:</span>
+                    <button class="voice-btn" onclick="sayIt()">🔊</button>
                 </div>
-                
-                <select id="day-select" onchange="updateView(parseInt(this.value), true)">
+                <select id="day-picker" onchange="refresh(parseInt(this.value), true)">
                     <option value="0">יום ראשון</option>
                     <option value="1">יום שני</option>
                     <option value="2">יום שלישי</option>
@@ -197,103 +188,106 @@
                     <option value="5">יום שישי</option>
                     <option value="6">יום שבת</option>
                 </select>
-
-                <div class="count-area" id="emoji-count-display"></div>
-                
-                <div class="sound-toggle">
-                    <input type="checkbox" id="auto-speak" checked>
-                    <label for="auto-speak">השמע קול באופן אוטומטי</label>
-                </div>
+                <div class="count-emojis" id="emo-today"></div>
             </div>
 
-            <div class="status-box" id="box-tomorrow">
-                <span class="label-text">מחר יהיה:</span>
-                <span class="day-display" id="val-tomorrow">-</span>
+            <div class="soft-card" id="card-next">
+                <span class="label-sm">מחר יהיה:</span>
+                <div class="day-big" id="val-next">-</div>
+                <div class="count-emojis" id="emo-next"></div>
             </div>
         </div>
 
-        <div class="visual-panel">
+        <div class="wheel-container">
             <div class="walker">🚶‍♂️</div>
-            <div class="wheel-box">
-                <div id="wheel"></div>
+            <div class="the-actual-wheel" id="main-wheel"></div>
+            
+            <div class="controls">
+                <input type="checkbox" id="auto-voice" checked>
+                <label for="auto-voice">השמע קול אוטומטית</label>
             </div>
         </div>
 
     </div>
 
     <script>
-        const days = ["ראשון", "שני", "שלישי", "רביעי", "חמישי", "שישי", "שבת"];
-        const dailyEmojis = ["☀️", "🌙", "🌳", "🦋", "🎈", "🕯️", "🏠"];
-        const wheel = document.getElementById('wheel');
-        const angleStep = 360 / days.length;
-        let currentDayIndex = 0;
+        const dayNames = ["ראשון", "שני", "שלישי", "רביעי", "חמישי", "שישי", "שבת"];
+        const dayEmojis = ["☀️", "🌙", "🌳", "🦋", "🎈", "🕯️", "🏠🛌"];
+        const wheel = document.getElementById('main-wheel');
+        const degStep = 360 / 7;
+        let currentIdx = 0;
 
-        // בניית הגלגל (הפעם עם אפשרות ללחוץ על היום בגלגל)
-        days.forEach((day, i) => {
-            const label = document.createElement('div');
-            label.className = 'wheel-day-text';
-            label.id = `label-${i}`;
-            label.innerText = day;
-            const angle = i * angleStep;
-            label.style.transform = `rotate(${angle}deg) translate(0, -165px) rotate(${-angle}deg)`;
-            label.onclick = () => {
-                document.getElementById('day-select').value = i;
-                updateView(i, true);
+        // בניית הגלגל עם אימוג'י אחד לכל יום
+        dayNames.forEach((name, i) => {
+            const item = document.createElement('div');
+            item.className = 'wheel-item';
+            item.id = `item-${i}`;
+            item.innerHTML = `<span>${dayEmojis[i]}</span>${name}`;
+            
+            const angle = i * degStep;
+            item.style.transform = `rotate(${angle}deg) translate(0, -175px) rotate(${-angle}deg)`;
+            
+            item.onclick = () => {
+                document.getElementById('day-picker').value = i;
+                refresh(i, true);
             };
-            wheel.appendChild(label);
+            wheel.appendChild(item);
         });
 
-        function updateView(idx, shouldSpeak) {
-            currentDayIndex = idx;
-            const total = days.length;
-            const yesterdayIdx = (idx - 1 + total) % total;
-            const tomorrowIdx = (idx + 1) % total;
+        function refresh(idx, voice) {
+            currentIdx = idx;
+            const len = 7;
+            const yestIdx = (idx - 1 + len) % len;
+            const nextIdx = (idx + 1) % len;
 
-            // 1. עדכון טקסטים
-            document.getElementById('val-yesterday').innerText = days[yesterdayIdx];
-            document.getElementById('val-tomorrow').innerText = days[tomorrowIdx];
+            // עדכון שמות בכרטיסיות
+            document.getElementById('val-yest').innerText = dayNames[yestIdx];
+            document.getElementById('val-next').innerText = dayNames[nextIdx];
 
-            // 2. עדכון אימוג'ים לפי כמות (יום ראשון = 1, וכו')
-            const display = document.getElementById('emoji-count-display');
-            display.innerHTML = '';
-            const count = idx + 1;
-            for(let i = 0; i < count; i++) {
-                const span = document.createElement('span');
-                span.innerText = dailyEmojis[idx];
-                display.appendChild(span);
-            }
+            // עדכון מניית אימוג'ים (1 לראשון, 2 לשני...)
+            drawCount('emo-yest', yestIdx);
+            drawCount('emo-today', idx);
+            drawCount('emo-next', nextIdx);
 
-            // 3. סיבוב הגלגל
-            const rotation = -idx * angleStep;
-            wheel.style.transform = `rotate(${rotation}deg)`;
+            // סיבוב הגלגל
+            const rot = -idx * degStep;
+            wheel.style.transform = `rotate(${rot}deg)`;
 
-            // 4. תיקון טקסט בגלגל
-            days.forEach((_, i) => {
-                const el = document.getElementById(`label-${i}`);
-                const currentAngle = i * angleStep;
-                el.style.transform = `rotate(${currentAngle}deg) translate(0, -165px) rotate(${-currentAngle - rotation}deg)`;
+            // תיקון טקסט בגלגל
+            dayNames.forEach((_, i) => {
+                const el = document.getElementById(`item-${i}`);
+                const a = i * degStep;
+                el.style.transform = `rotate(${a}deg) translate(0, -175px) rotate(${-a - rot}deg)`;
                 el.classList.toggle('highlight', i === idx);
             });
 
-            // 5. השמעת קול אם האופציה מסומנת
-            if (shouldSpeak && document.getElementById('auto-speak').checked) {
-                speakDay();
+            if (voice && document.getElementById('auto-voice').checked) {
+                sayIt();
             }
         }
 
-        function speakDay() {
-            const text = "היום יום " + days[currentDayIndex];
-            const utterance = new SpeechSynthesisUtterance(text);
-            utterance.lang = 'he-IL'; // הגדרה לעברית
-            utterance.rate = 0.9; // קצב דיבור מעט איטי יותר לבהירות
-            window.speechSynthesis.speak(utterance);
+        function drawCount(id, dayI) {
+            const target = document.getElementById(id);
+            target.innerHTML = '';
+            const num = dayI + 1;
+            for(let i = 0; i < num; i++) {
+                const s = document.createElement('span');
+                s.innerText = dayEmojis[dayI];
+                target.appendChild(s);
+            }
         }
 
-        // אתחול לפי היום האמיתי
+        function sayIt() {
+            const speech = new SpeechSynthesisUtterance("היום יום " + dayNames[currentIdx]);
+            speech.lang = 'he-IL';
+            speech.rate = 0.9;
+            window.speechSynthesis.speak(speech);
+        }
+
         window.onload = () => {
-            const today = new Date().getDay(); 
-            document.getElementById('day-select').value = today;
-            updateView(today, false); // לא להשמיע קול מיד בטעינה כדי לא להבהיל
+            const now = new Date().getDay();
+            document.getElementById('day-picker').value = now;
+            refresh(now, false);
         };
     </script>
 </body>
